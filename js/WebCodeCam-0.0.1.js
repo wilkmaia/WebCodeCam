@@ -1,6 +1,6 @@
 /*!
- * jQuery Plugin WebCodeCam-0.0.1 
- * Author: Tóth András 2014-11-01
+ * jQuery Plugin WebCodeCam-0.0.2
+ * Author: Tóth András
  * Web: http://atandrastoth.co.uk
  * email: atandrastoth@gmail.com
  * Licensed under the MIT license
@@ -139,7 +139,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
         setCallback: function() {
             DecodeWorker.onmessage = function(e) {
                 if (delay || camera.paused) return;
-                if (e.data.success && e.data.result[0].length > 1 && e.data.result[0] != undefined) {
+                if (e.data.success && e.data.result[0].length > 1 && e.data.result[0].indexOf("undefined") == -1) {
                     delay = true;
                     display.data().plugin_WebCodeCam.delay();
                     display.data().plugin_WebCodeCam.beep();
@@ -196,7 +196,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
                 delay = false;
                 if (display.data().plugin_WebCodeCam.options.ReadBarecode) display.data().plugin_WebCodeCam.tryParseBarecode();
                 if (display.data().plugin_WebCodeCam.options.ReadQRCode) display.data().plugin_WebCodeCam.tryParseQRCode();
-            }, 1000);
+            }, 2000);
         },
         getLastImageSrc: function() {
             return lastImageSrc;
