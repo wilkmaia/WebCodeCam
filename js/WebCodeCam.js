@@ -1,5 +1,5 @@
 /*!
- * jQuery Plugin WebCodeCam-0.0.2
+ * jQuery Plugin WebCodeCam-0.0.6
  * Author: Tóth András
  * Web: http://atandrastoth.co.uk
  * email: atandrastoth@gmail.com
@@ -28,7 +28,11 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             ReadQRCode: true,
             ReadBarecode: true,
             width: 320,
-            height: 320 * 3 / 4,
+            height: 240,
+            videoSource: {
+                maxWidth: 640,
+                maxHeight: 480
+            },
             flipVertical: false,
             flipHorizontal: false,
             zoom: -1,
@@ -65,7 +69,12 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
             if (navigator.getUserMedia) {
                 navigator.getUserMedia({
-                    video: true,
+                    video: {
+                        mandatory: {
+                            maxWidth: this.options.videoSource.maxWidth,
+                            maxHeight: this.options.videoSource.maxHeight
+                        }
+                    },
                     audio: false
                 }, function(stream) {
                     var url = window.URL || window.webkitURL;
@@ -148,7 +157,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
                     flipped = !flipped;
                     setTimeout(function() {
                         display.data().plugin_WebCodeCam.tryParseBarecode();
-                    }, 40 * 5);
+                    }, 40 * 8);
                 }
             }
             qrcode.callback = function(a) {
@@ -179,7 +188,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             } catch (e) {
                 setTimeout(function() {
                     display.data().plugin_WebCodeCam.tryParseQRCode();
-                }, 40 * 10);
+                }, 40 * 8);
             };
         },
         delay: function() {
@@ -314,7 +323,11 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             return output;
         },
         beep: function() {
-            if (typeof this.options.beep == 'string') new Audio(this.options.beep).play();
+            if (typeof this.options.beep != 'string') return;
+            var url = this.options.beep;
+            setTimeout(function() {
+                new Audio(url).play();
+            }, 0);
         }
     };
 

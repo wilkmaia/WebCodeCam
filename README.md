@@ -15,6 +15,14 @@ WebCodeCam is a jQuery plugin for  barcode and qr-code reading .
 Version
 ----
 
+0.0.6
+
+- add a new option: set the video resource maximum resolution.
+- add new demo with setting.
+
+Version
+----
+
 0.0.1
 
 Included decoders
@@ -82,7 +90,11 @@ Required HTML & Javascript example
       ReadQRCode: true, // false or true
       ReadBarecode: true, // false or true
       width: 320,
-      height: 320 * 3 / 4,
+      height: 240,
+      videoSource: {
+          maxWidth: 640, //max Videosource resolution width
+          maxHeight: 480 //max Videosource resolution height
+      },
       flipVertical: false,  // false or true
       flipHorizontal: false,  // false or true
       zoom: -1, // if zoom = -1, auto zoom for optimal resolution else int
