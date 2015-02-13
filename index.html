@@ -38,7 +38,7 @@
   </head>
   <body>
     <div class="page-header">
-      <h1 style="margin-left:10px;">WebCodeCam V 0.0.6 - BareCode and Qr-Code reader jQuery plugin<br>
+      <h1 style="margin-left:10px;">WebCodeCam V 0.1.0 - BareCode and Qr-Code reader jQuery plugin<br>
         <small>download from: 
       <a href="https://github.com/andrastoth/WebCodeCam"> GitHub </a> OR
       <a href="http://www.jsclasses.org/package/385-JavaScript-barcode-and-qr-code-scanner.html"> JSclasses </a>
@@ -50,7 +50,8 @@
                 <div class="panel-heading" style="display: inline-block;width: 100%;">
                     <h4 style="width:50%;float:left;">WebCodeCam.js Demonstration</h4>
                     <div style="width:50%;float:right;margin-top: 5px;margin-bottom: 5px;text-align: right;">
-                        <button id="save" type="button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-picture"></span></button>
+                        <select id="cameraId" class="form-control" style="display: inline-block;width: auto;"></select>
+                        <button id="save" type="button" class="btn btn-info btn-sm disabled"><span class="glyphicon glyphicon-picture"></span></button>
                         <button id="play" type="button" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-play"></span></button>
                         <button id="stop" type="button" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-stop"></span></button>
                     </div>
@@ -100,8 +101,6 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/qrcodelib.js"></script>
-  <script type="text/javascript" src="js/WebCodeCam.js"></script>
+  <script type="text/javascript" src="js/WebCodeCam.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
-  <script type="text/javascript">
-  </script>
 </html>

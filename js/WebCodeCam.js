@@ -1,17 +1,15 @@
 /*!
- * jQuery Plugin WebCodeCam-0.0.6
+ * jQuery Plugin WebCodeCam-0.1.0
  * Author: Tóth András
  * Web: http://atandrastoth.co.uk
  * email: atandrastoth@gmail.com
  * Licensed under the MIT license
  */
-
 /*
 Included:
 barcode decoder (DecoderWorker.js) -> https://github.com/EddieLa/BarcodeReader/blob/master/src/DecoderWorker.js
 qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
 */
-
 ;
 (function($, window, document, undefined) {
     var camera = $('<video style="position:absolute;visibility:hidden;display: none;">')[0];
@@ -30,6 +28,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             width: 320,
             height: 240,
             videoSource: {
+                id: true,
                 maxWidth: 640,
                 maxHeight: 480
             },
@@ -43,9 +42,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             contrast: 0,
             threshold: 0,
             sharpness: [],
-            resultFunction: function(resText, lastImageSrc) {
-
-            }
+            resultFunction: function(resText, lastImageSrc) {}
         };
 
     function Plugin(element, options) {
@@ -54,7 +51,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
         this.options = $.extend({}, defaults, options);
         this._defaults = defaults;
         this._name = pluginName;
-        if (this.initCamera()) {
+        if (this.init()) {
             this.setEventListeners();
             if (this.options.ReadQRCode || this.options.ReadBarecode) {
                 this.setCallback();
@@ -62,7 +59,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
         }
     }
     Plugin.prototype = {
-        initCamera: function() {
+        init: function() {
             con = this.element.getContext('2d');
             w = this.options.width;
             h = this.options.height;
@@ -73,22 +70,27 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
                         mandatory: {
                             maxWidth: this.options.videoSource.maxWidth,
                             maxHeight: this.options.videoSource.maxHeight
-                        }
+                        },
+                        optional: [{
+                            sourceId: this.options.videoSource.id
+                        }]
                     },
                     audio: false
-                }, function(stream) {
-                    var url = window.URL || window.webkitURL;
-                    camera.src = url ? url.createObjectURL(stream) : stream;
-                    camera.play();
-                }, function(error) {
-                    alert('Something went wrong. (error code ' + error.code + ')');
-                    return false;
-                });
+                }, this.cameraSuccess, this.cameraError);
             } else {
                 alert('Sorry, the browser you are using doesn\'t support getUserMedia');
                 return false;
             }
             return true;
+        },
+        cameraSuccess: function(stream) {
+            var url = window.URL || window.webkitURL;
+            camera.src = url ? url.createObjectURL(stream) : stream;
+            camera.play();
+        },
+        cameraError: function(error) {
+            alert('Something went wrong. (error code ' + error.code + ')');
+            return false;
         },
         setEventListeners: function() {
             camera.addEventListener('canplay', function(e) {
@@ -101,8 +103,8 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
                         con.translate(-w, 0);
                     }
                     if (display.data().plugin_WebCodeCam.options.flipVertical) {
-                        con.scale(1, - 1);
-                        con.translate(0, - h);
+                        con.scale(1, -1);
+                        con.translate(0, -h);
                     }
                     isStreaming = true;
                     if (display.data().plugin_WebCodeCam.options.ReadQRCode || display.data().plugin_WebCodeCam.options.ReadBarecode) {
@@ -330,7 +332,6 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
             }, 0);
         }
     };
-
     $.fn[pluginName] = function(options) {
         return this.each(function() {
             if (!$.data(this, "plugin_" + pluginName)) {

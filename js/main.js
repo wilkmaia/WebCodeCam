@@ -18,7 +18,6 @@ var decoder = $('#qr-canvas'),
     shv = $('#sharpness-value'),
     gr = $('#grayscale'),
     grv = $('#grayscale-value');
-
 pr.parent().click(function() {
     printDiv('.img-thumbnail');
 });
@@ -26,6 +25,12 @@ sl.css('opacity', .5);
 pl.click(function() {
     if (typeof decoder.data().plugin_WebCodeCam == "undefined") {
         decoder.WebCodeCam({
+            videoSource: {
+                id: $('select#cameraId').val(),
+                maxWidth: 640,
+                maxHeight: 480
+            },
+            autoBrightnessValue: 100,
             resultFunction: function(text, imgSrc) {
                 si.attr('src', imgSrc);
                 sQ.text(text);
@@ -42,12 +47,13 @@ pl.click(function() {
             decoder.data().plugin_WebCodeCam.cameraStop();
         });
     } else {
+        sv.removeClass('disabled');
         sQ.text('Scanning ...');
         decoder.data().plugin_WebCodeCam.cameraPlay();
     }
 });
 sv.click(function() {
-    if(typeof decoder.data().plugin_WebCodeCam =="undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var src = decoder.data().plugin_WebCodeCam.getLastImageSrc();
     si.attr('src', src);
 });
@@ -91,7 +97,7 @@ function changeSharpness() {
     var value = sh.prop('checked');
     if (value) {
         shv.text(shv.text().split(':')[0] + ': on');
-        decoder.data().plugin_WebCodeCam.options.sharpness = [0, - 1, 0, - 1, 5, - 1, 0, - 1, 0];
+        decoder.data().plugin_WebCodeCam.options.sharpness = [0, -1, 0, -1, 5, -1, 0, -1, 0];
     } else {
         shv.text(shv.text().split(':')[0] + ': off');
         decoder.data().plugin_WebCodeCam.options.sharpness = [];
@@ -108,8 +114,6 @@ function changeGrayscale() {
         decoder.data().plugin_WebCodeCam.options.grayScale = false;
     }
 }
-
-
 var getZomm = setInterval(function() {
     var a;
     try {
@@ -122,3 +126,29 @@ var getZomm = setInterval(function() {
         clearInterval(getZomm);
     }
 }, 500);
+var videoSelect = document.querySelector('select#cameraId');
+$(videoSelect).change(function(event) {
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    decoder.data().plugin_WebCodeCam.options.videoSource.id = $(this).val();
+    decoder.data().plugin_WebCodeCam.cameraStop();
+    decoder.data().plugin_WebCodeCam.init();
+    decoder.data().plugin_WebCodeCam.cameraPlay();
+});
+
+function gotSources(sourceInfos) {
+    for (var i = 0; i !== sourceInfos.length; ++i) {
+        var sourceInfo = sourceInfos[i];
+        var option = document.createElement('option');
+        option.value = sourceInfo.id;
+        if (sourceInfo.kind === 'video') {
+            var face = sourceInfo.facing == '' ? 'unknown' : sourceInfo.facing;
+            option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1) + ' (facing: ' + face + ')';
+            videoSelect.appendChild(option);
+        }
+    }
+}
+if (typeof MediaStreamTrack.getSources === 'undefined') {
+    alert('This browser does not support MediaStreamTrack.\n\nTry Chrome Canary.');
+} else {
+    MediaStreamTrack.getSources(gotSources);
+}
