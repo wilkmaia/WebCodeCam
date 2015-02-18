@@ -69,7 +69,7 @@ function getBase64Image(img) {
 }
 
 function changeZoom(a) {
-	if(typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var value = typeof a != 'undefined' ? parseFloat(a.toPrecision(2)) : zo.val() / 10;
     zov.text(zov.text().split(':')[0] + ': ' + value.toString());
     decoder.data().plugin_WebCodeCam.options.zoom = parseFloat(value);
@@ -77,32 +77,32 @@ function changeZoom(a) {
 }
 
 function changeContrast() {
-	if(typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var value = co.val();
     cov.text(cov.text().split(':')[0] + ': ' + value.toString());
     decoder.data().plugin_WebCodeCam.options.contrast = parseFloat(value);
 }
 
 function changeBrightness() {
-	if(typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var value = br.val();
     brv.text(brv.text().split(':')[0] + ': ' + value.toString());
     decoder.data().plugin_WebCodeCam.options.brightness = parseFloat(value);
 }
 
 function changeThreshold() {
-	if(typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var value = tr.val();
     trv.text(trv.text().split(':')[0] + ': ' + value.toString());
     decoder.data().plugin_WebCodeCam.options.threshold = parseFloat(value);
 }
 
 function changeSharpness() {
-	if(typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var value = sh.prop('checked');
     if (value) {
         shv.text(shv.text().split(':')[0] + ': on');
-        decoder.data().plugin_WebCodeCam.options.sharpness =  [  0, -1,  0, -1,  5, -1,   0, -1,  0 ];
+        decoder.data().plugin_WebCodeCam.options.sharpness = [0, -1, 0, -1, 5, -1, 0, -1, 0];
     } else {
         shv.text(shv.text().split(':')[0] + ': off');
         decoder.data().plugin_WebCodeCam.options.sharpness = [];
@@ -110,7 +110,7 @@ function changeSharpness() {
 }
 
 function changeGrayscale() {
-	if(typeof decoder.data().plugin_WebCodeCam == "undefined") return;
+    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
     var value = gr.prop('checked');
     if (value) {
         grv.text(grv.text().split(':')[0] + ': on');
@@ -120,7 +120,6 @@ function changeGrayscale() {
         decoder.data().plugin_WebCodeCam.options.grayScale = false;
     }
 }
-
 var getZomm = setInterval(function() {
     var a;
     try {
