@@ -126,14 +126,6 @@ var getZomm = setInterval(function() {
         clearInterval(getZomm);
     }
 }, 500);
-var videoSelect = document.querySelector('select#cameraId');
-$(videoSelect).change(function(event) {
-    if (typeof decoder.data().plugin_WebCodeCam == "undefined") return;
-    decoder.data().plugin_WebCodeCam.options.videoSource.id = $(this).val();
-    decoder.data().plugin_WebCodeCam.cameraStop();
-    decoder.data().plugin_WebCodeCam.init();
-    decoder.data().plugin_WebCodeCam.cameraPlay();
-});
 
 function gotSources(sourceInfos) {
     for (var i = 0; i !== sourceInfos.length; ++i) {
@@ -147,8 +139,17 @@ function gotSources(sourceInfos) {
         }
     }
 }
-if (typeof MediaStreamTrack.getSources === 'undefined') {
-    alert('This browser does not support MediaStreamTrack.\n\nTry Chrome Canary.');
-} else {
+if (typeof MediaStreamTrack.getSources !== 'undefined') {
+    var videoSelect = document.querySelector('select#cameraId');
+    $(videoSelect).change(function(event) {
+        if (typeof decoder.data().plugin_WebCodeCam !== "undefined") {
+            decoder.data().plugin_WebCodeCam.options.videoSource.id = $(this).val();
+            decoder.data().plugin_WebCodeCam.cameraStop();
+            decoder.data().plugin_WebCodeCam.init();
+            decoder.data().plugin_WebCodeCam.cameraPlay();
+        }
+    });
     MediaStreamTrack.getSources(gotSources);
+} else {
+    document.querySelector('select#cameraId').remove();
 }
