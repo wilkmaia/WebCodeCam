@@ -24,8 +24,8 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
 		defaults = {
 			ReadQRCode: true,
 			ReadBarecode: true,
-			width: 320,
-			height: 240,
+			width: 640,
+			height: 480,
 			videoSource: {
 				id: true,
 				maxWidth: 640,
@@ -103,8 +103,8 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
 			camera.addEventListener('canplay', function(e) {
 				if (!isStreaming) {
 					if (camera.videoWidth > 0) h = camera.videoHeight / (camera.videoWidth / w);
-					display[0].setAttribute('width', w);
-					display[0].setAttribute('height', h);
+					//display[0].setAttribute('width', w);
+					//display[0].setAttribute('height', h);
 					if (Self.options.flipHorizontal) {
 						con.scale(-1, 1);
 						con.translate(-w, 0);
@@ -172,6 +172,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
 			};
 		},
 		tryParseBarecode: function() {
+			console.log("barecode");
 			var flipMode = flipped == true ? "flip" : "normal";
 			lastImageSrc = display[0].toDataURL();
 			var dst = con.getImageData(0, 0, w, h).data;
@@ -185,6 +186,7 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
 			});
 		},
 		tryParseQRCode: function() {
+			console.log("qrcode");
 			try {
 				lastImageSrc = display[0].toDataURL();
 				qrcode.decode();
@@ -224,6 +226,8 @@ qr-decoder (qrcodelib.js) -> https://github.com/LazarSoft/jsqrcode
 			camera.play();
 			setTimeout(function() {
 				delay = false;
+				return;
+				
 				if (Self.options.ReadBarecode) Self.tryParseBarecode();
 				if (Self.options.ReadQRCode) Self.tryParseQRCode();
 			}, 2000);
