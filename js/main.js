@@ -1,4 +1,4 @@
-var syncpage = "http://10.46.18.39/WebCodeCam/remote/remote.php";
+var syncpage = "http://10.46.18.22/remote/remote.php";
 var evento;
 var db = new Dexie( "eceel_3" );
 db.version(1).stores({
@@ -104,6 +104,8 @@ if( document.location.search )
 			autoBrightnessValue: 120,
 			resultFunction: function(text, imgSrc) {
 				text = JSON.parse(text +"");
+				evento = 2;
+				
 				
 				sQ.html("<strong>"+ text.nome +"</strong> registrado com sucesso.");
 				sl.fadeOut(150, function() {
@@ -119,19 +121,33 @@ if( document.location.search )
 						return;
 					}
 					
-					db.eventos.where("id").equals(evento).count(function(c){
+					db.eventos.where("id").equals(evento).count(function(c2){
 						// Não há evento com esse ID
-						if( c == 0 )
+						if( c2 == 0 )
 						{
 							sQ.html("ERRO - EVENTO NÃO CADASTRADO");
 							return;
 						}
 					
 						// Caso tudo corra bem, insere a frequência
-						db.frequencia.where("usuario").equals(text.id).count(function(c){
+						db.frequencia.where("usuario").equals(text.id).count(function(c3){
 							// Para evitar dados reinseridos sem necessidade
-							if( c == 0 )
+							if( c3 == 0 )
 							{
+								
+								$.ajax({
+									type: 'GET',
+									url: syncpage + "?callback=successFreq2&opt=1",
+									data: "usuario=" + text.id + "&evento=" + evento,
+									dataType: "jsonp",
+									jsonpCallback: "successFreq2",
+									crossDomain: true,
+									sucess: successFreq,
+									error: function(a, b, e) {
+										console.error(e);
+									}
+								});
+								
 								db.frequencia.add({
 									usuario: text.id,
 									evento: evento,
@@ -277,4 +293,8 @@ function successEvents(res){
 			}
 		}
 	});
+}
+
+function successFreq2(res){
+	console.log("Coleta efetuada.");
 }

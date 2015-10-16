@@ -75,7 +75,7 @@ switch( $opt )
 	
 	case "2":
 		$db->setSql( "SELECT * FROM cadastros" );
-		$q = $db->executeQuery();
+		$q = @$db->executeQuery();
 		
 		foreach( $q as $a )
 		{
