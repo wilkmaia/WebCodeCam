@@ -24,12 +24,17 @@ function loadInitialData( f ) {
 			var _id = aux[0];
 			var _nome = aux[1].toUpperCase();
 			
-			//console.log('{"id":'+ _id +',"nome":"'+ _nome +'"}');
+			console.log('{"id":'+ _id +',"nome":"'+ _nome +'"}');
 			db.usuarios.add({
 				id: parseInt( _id ),
 				nome: "" + _nome,
 			});
 		}
+	});
+	
+	db.eventos.add({
+		id: 1,
+		nome: "Encontro Estadual",
 	});
 	
 	
@@ -128,8 +133,7 @@ if( document.location.search )
 			autoBrightnessValue: 120,
 			resultFunction: function(text, imgSrc) {
 				text = JSON.parse(text +"");
-				evento = 2;
-				
+				evento = 1;
 				
 				sQ.html("<strong>"+ text.nome +"</strong> registrado com sucesso.");
 				sl.fadeOut(150, function() {
