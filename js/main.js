@@ -1,6 +1,6 @@
-var syncpage = "http://10.46.18.22/remote/remote.php";
+//var syncpage = "http://10.46.18.22/remote/remote.php";
 var evento;
-var db = new Dexie( "eceel_3" );
+var db = new Dexie( "encontro_estadual" );
 db.version(1).stores({
 	usuarios: "id, nome",
 	eventos: "id, nome",
@@ -12,7 +12,28 @@ function deleteDatabase() {
 	db.delete();
 }
 
-function loadInitialData() {
+function loadInitialData( f ) {
+	
+	$.get( f, function(data){
+		var lines = data.split( '\n' );
+		var N = lines.length;
+		
+		for( i = 0; i < N; ++i )
+		{
+			var aux = lines[i].split( '\t' );
+			var _id = aux[0];
+			var _nome = aux[1].toUpperCase();
+			
+			//console.log('{"id":'+ _id +',"nome":"'+ _nome +'"}');
+			db.usuarios.add({
+				id: parseInt( _id ),
+				nome: "" + _nome,
+			});
+		}
+	});
+	
+	
+	/*
 	db.usuarios.add({
 		id: 1,
 		nome: "Wilk Coêlho Maia",
@@ -25,8 +46,11 @@ function loadInitialData() {
 	db.eventos.add({
 		id: 1,
 		nome: "Olimpíada de Programação",
-	})
+	});
+	*/
 }
+
+loadInitialData( 'data.in' );
 
 if( document.location.search )
 {
@@ -135,6 +159,7 @@ if( document.location.search )
 							if( c3 == 0 )
 							{
 								
+								/*
 								$.ajax({
 									type: 'GET',
 									url: syncpage + "?callback=successFreq2&opt=1",
@@ -147,6 +172,7 @@ if( document.location.search )
 										console.error(e);
 									}
 								});
+								*/
 								
 								db.frequencia.add({
 									usuario: text.id,
@@ -168,14 +194,24 @@ if( document.location.search )
 				alert(message);
 			}
 		});
-		sQ.text('Direcione a câmera ao QR Code');
+		sQ.text('Direcione a câmera ao QR Code e pressione quando estiver enquadrado');
 	} else {
-		sQ.text('Direcione a câmera ao QR Code');
+		sQ.text('Direcione a câmera ao QR Code e pressione quando estiver enquadrado');
 		$("#qr-canvas").data().plugin_WebCodeCam.cameraPlay();
 	}
 }).call(window.Page = window.Page || {});
 
+
 function syncData() {
+	
+	var syncpage = prompt( "Entre com o IP do servidor, apenas números. Deixe em branco caso não saiba o que está fazendo.", "" );
+	if( syncpage == "" )
+		return;
+	
+	syncpage = "http://" + syncpage + "/WebCodeCam/remote/remote.php";
+	var r = confirm( "Confirmando o endereço final do servidor de atualização: " + syncpage );
+	if( r == false )
+		return;
 	
 	// ENVIA FREQUÊNCIAS
 	var n = -1;
